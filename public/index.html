@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <style>
+        #messages { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        input { width: 80%; padding: 10px; }
+        button { padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>POSSOUD</h2>
+    <div id="messages"></div>
+    <input id="msg" placeholder="Mesaj yaz...">
+    <button onclick="send()">Gönder</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on("message", (msg) => {
+            const div = document.getElementById("messages");
+            div.innerHTML += "<p>" + msg + "</p>";
+            div.scrollTop = div.scrollHeight;
+        });
+
+        function send() {
+            const text = document.getElementById("msg").value;
+            if(text.trim() !== ""){
+                socket.emit("message", text);
+                document.getElementById("msg").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
